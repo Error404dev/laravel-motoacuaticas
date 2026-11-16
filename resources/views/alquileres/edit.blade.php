@@ -1,29 +1,45 @@
 @extends('layouts.app')
 
+@section('titulo', 'Editar alquiler')
+
 @section('contenido')
-<h1>Editar alquiler</h1>
+    <h2>Editar alquiler</h2>
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        @foreach ($errors->all() as $error)
-            <div>{{ $error }}</div>
-        @endforeach
-    </div>
-@endif
+    @if ($errors->any())
+        <div class="error">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
 
-<form action="{{ route('alquileres.update', $alquiler) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <select name="moto_acuatica_id" class="form-control mb-2">
-        @foreach ($motos as $moto)
-            <option value="{{ $moto->id }}" @selected(old('moto_acuatica_id', $alquiler->moto_acuatica_id) == $moto->id)>
-                {{ $moto->marca }} {{ $moto->modelo }}
-            </option>
-        @endforeach
-    </select>
-    <input type="text" name="cliente" value="{{ old('cliente', $alquiler->cliente) }}" placeholder="Cliente" class="form-control mb-2">
-    <input type="date" name="fecha" value="{{ old('fecha', $alquiler->fecha) }}" class="form-control mb-2">
-    <input type="number" name="horas" value="{{ old('horas', $alquiler->horas) }}" placeholder="Horas" class="form-control mb-2">
-    <button class="btn btn-primary">Actualizar</button>
-</form>
+    <form action="{{ route('alquileres.update', $alquiler) }}" method="POST">
+        @csrf
+        @method('PUT')
+
+        <label for="moto_acuatica_id">Moto acuática:</label>
+        <select name="moto_acuatica_id" id="moto_acuatica_id" required>
+            @foreach ($motos as $moto)
+                <option value="{{ $moto->id }}"
+                    @selected(old('moto_acuatica_id', $alquiler->moto_acuatica_id) == $moto->id)>
+                    {{ $moto->marca }} {{ $moto->modelo }}
+                </option>
+            @endforeach
+        </select>
+
+        <label for="cliente">Nombre del cliente:</label>
+        <input type="text" name="cliente" id="cliente"
+            value="{{ old('cliente', $alquiler->cliente) }}" required>
+
+        <label for="fecha">Fecha:</label>
+        <input type="date" name="fecha" id="fecha"
+            value="{{ old('fecha', $alquiler->fecha) }}" required>
+
+        <label for="horas">Cantidad de horas:</label>
+        <input type="number" name="horas" id="horas" min="1"
+            value="{{ old('horas', $alquiler->horas) }}" required>
+
+        <button class="boton" type="submit">Guardar cambios</button>
+        <a class="boton" href="{{ route('alquileres.index') }}">Volver</a>
+    </form>
 @endsection

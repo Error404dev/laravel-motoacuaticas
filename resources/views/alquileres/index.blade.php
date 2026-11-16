@@ -1,42 +1,54 @@
 @extends('layouts.app')
 
+@section('titulo', 'Alquileres')
+
 @section('contenido')
-<h1>Alquileres</h1>
+    <h2>Listado de alquileres</h2>
 
-<a href="{{ route('alquileres.create') }}" class="btn btn-primary mb-3">Nuevo alquiler</a>
+    <a class="boton" href="{{ route('alquileres.create') }}">Agregar alquiler</a>
 
-<form method="GET" class="mb-3">
-    <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Buscar por cliente">
-    <button class="btn btn-secondary btn-sm">Buscar</button>
-</form>
+    <form method="GET" action="{{ route('alquileres.index') }}">
+        <label for="buscar">Buscar por cliente:</label>
+        <input type="text" name="buscar" id="buscar" value="{{ request('buscar') }}">
+        <button class="boton" type="submit">Buscar</button>
+    </form>
 
-<table class="table">
-    <tr>
-        <th>Cliente</th>
-        <th>Moto</th>
-        <th>
-            Fecha
-            <a href="{{ route('alquileres.index', ['buscar' => request('buscar'), 'direccion' => 'asc']) }}">↑</a>
-            <a href="{{ route('alquileres.index', ['buscar' => request('buscar'), 'direccion' => 'desc']) }}">↓</a>
-        </th>
-        <th>Horas</th>
-        <th>Acciones</th>
-    </tr>
-    @foreach ($alquileres as $alquiler)
-        <tr>
-            <td>{{ $alquiler->cliente }}</td>
-            <td>{{ $alquiler->motoAcuatica->marca }} {{ $alquiler->motoAcuatica->modelo }}</td>
-            <td>{{ $alquiler->fecha }}</td>
-            <td>{{ $alquiler->horas }}</td>
-            <td>
-                <a href="{{ route('alquileres.edit', $alquiler) }}" class="btn btn-warning btn-sm">Editar</a>
-                <form action="{{ route('alquileres.destroy', $alquiler) }}" method="POST" style="display:inline">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
-            </td>
-        </tr>
-    @endforeach
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Moto acuática</th>
+                <th>Fecha</th>
+                <th>Horas</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @forelse ($alquileres as $alquiler)
+                <tr>
+                    <td>{{ $alquiler->cliente }}</td>
+                    <td>{{ $alquiler->motoAcuatica->marca }} {{ $alquiler->motoAcuatica->modelo }}</td>
+                    <td>{{ $alquiler->fecha }}</td>
+                    <td>{{ $alquiler->horas }}</td>
+                    <td>
+                        <a class="boton" href="{{ route('alquileres.edit', $alquiler) }}">Editar</a>
+
+                        <form action="{{ route('alquileres.destroy', $alquiler) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="boton boton-eliminar" type="submit"
+                                onclick="return confirm('¿Querés eliminar este alquiler?')">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">No hay alquileres registrados.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 @endsection
