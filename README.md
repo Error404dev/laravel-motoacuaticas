@@ -30,9 +30,3 @@ php artisan key:generate
 php artisan migrate
 php artisan serve
 ```
-
-En Windows, usar `copy` en lugar de `cp`.
-
-Después, abrir http://localhost:8000 en el navegador.
-
-Por defecto usa SQLite. Para usar MySQL, crear una base vacía y configurar en el `.env` las variables `DB_CONNECTION=mysql`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`.
